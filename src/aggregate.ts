@@ -4,6 +4,7 @@ import openexchangerates from './sources/openexchangerates'
 import currencylayer from './sources/currencylayer'
 
 import { CurrencyRates } from './types/types'
+import { isFiat } from './fiat'
 
 // A rate is an outlier when it strays more than this fraction from the median
 // of its sources. Relative (not absolute) deviation, because rates span ten
@@ -46,6 +47,10 @@ export class AggregationError extends Error {
 
 function addRates(data: AggregatedRates, source: string, rates: CurrencyRates[]): void {
     for (const rate of rates) {
+        // Fiat only: one choke point that drops crypto, metals and tokens
+        // squatting on fiat-looking codes, whatever source they came from.
+        if (!isFiat(rate.code)) continue
+
         if (!data[rate.code]) {
             data[rate.code] = { avg: 0, rates: [] }
         }

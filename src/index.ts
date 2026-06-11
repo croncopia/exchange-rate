@@ -1,7 +1,7 @@
 import aggregate from "./aggregate"
 import distribute from "./distribute"
 
-//import 'dotenv/config'
+import 'dotenv/config'
 
 async function main() {
 
