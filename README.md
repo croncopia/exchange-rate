@@ -1,5 +1,9 @@
 # exchange-rate
 
+![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcroncopia%2Fexchange-rate%2Frefs%2Fheads%2Fmain%2Fstats.json&query=symbol_count&label=Tracked%20Fiat)
+![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcroncopia%2Fexchange-rate%2Frefs%2Fheads%2Fmain%2Fstats.json&query=timestamp&label=Last%20Updated&cacheSeconds=20)
+
+
 Aggregated fiat exchange rates, rebuilt hourly from diffrent providers and published as static JSON — one file per currency, no API key required to consume.
 
 ## How it works
