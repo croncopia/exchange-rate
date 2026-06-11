@@ -39,7 +39,7 @@ jobs:
       - name: Checkout target repository
         uses: actions/checkout@v4
         with:
-          repository: notreeceharris/live-exchange-rate
+          repository: croncopia/exchange-rate
           ref: main
           path: target-repo
           token: ${{ secrets.GITHUB_TOKEN }}
