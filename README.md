@@ -1,6 +1,7 @@
 # exchange-rate
 
 ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcroncopia%2Fexchange-rate%2Frefs%2Fheads%2Fmain%2Fstats.json&query=symbol_count&label=Tracked%20Fiat)
+![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcroncopia%2Fexchange-rate%2Frefs%2Fheads%2Fmain%2Fstats.json&query=source_count&label=Sources&cacheSeconds=20)
 ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcroncopia%2Fexchange-rate%2Frefs%2Fheads%2Fmain%2Fstats.json&query=timestamp&label=Last%20Updated&cacheSeconds=20)
 
 
