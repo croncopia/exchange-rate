@@ -70,7 +70,7 @@ jobs:
           else
             # Get list of changed files for commit message
             CHANGED_FILES=$(git diff --name-only --staged | head -10 | tr '\n' ', ' | sed 's/, $//')
-            COMMIT_MSG="Update domain lists - $(date +'%Y-%m-%d %H:%M:%S')"
+            COMMIT_MSG="Update rates - $(date +'%Y-%m-%d %H:%M:%S')"
 
             git commit -m "$COMMIT_MSG"
             git push
