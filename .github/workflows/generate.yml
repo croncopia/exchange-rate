@@ -53,6 +53,8 @@ jobs:
       - name: Commit and push all changes
         run: |
           cd target-repo
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           # Add all files (new, modified, deleted)
           git add -A
