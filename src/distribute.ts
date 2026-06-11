@@ -4,6 +4,16 @@ import { AggregatedRates } from './aggregate'
 
 const OUTPUT_DIR = './out'
 
+// The index and stats live in the repo root, next to the output dir — not
+// inside it — so they survive a prune and sit at a stable, well-known path.
+const INDEX_FILE = './index.json'
+const STATS_FILE = './stats.json'
+
+// Where each symbol file ends up once published; written into index.json so
+// consumers can resolve a symbol to its URL. <symbol> is replaced per file.
+const LOCATION_TEMPLATE =
+    'https://raw.githubusercontent.com/NotReeceHarris/live-exchange-rate/refs/heads/main/latest/<symbol>.json'
+
 // Codes come from external APIs and include unicode, "$", dots, spaces and
 // worse — only codes matching this pattern get their own file. Unsafe codes
 // still appear as entries inside every other file's rates map.
@@ -45,6 +55,25 @@ interface SymbolFile {
     base: string
     timestamp: string
     rates: Record<string, number>
+}
+
+function ordinalSuffix(day: number): string {
+    if (day % 100 >= 11 && day % 100 <= 13) return 'th'
+    switch (day % 10) {
+        case 1: return 'st'
+        case 2: return 'nd'
+        case 3: return 'rd'
+        default: return 'th'
+    }
+}
+
+// "11th July @ 14:52", in UTC so runs from any machine or CI agree.
+function formatTimestamp(date: Date): string {
+    const day = date.getUTCDate()
+    const month = date.toLocaleString('en-GB', { month: 'long', timeZone: 'UTC' })
+    const hours = String(date.getUTCHours()).padStart(2, '0')
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0')
+    return `${day}${ordinalSuffix(day)} ${month} @ ${hours}:${minutes}`
 }
 
 // Write via a temp file and rename so a crash mid-write can never leave a
@@ -93,8 +122,18 @@ export default async function distribute(
             continue
         }
 
-        if (!SAFE_CODE.test(base)) {
+        // Filenames are uppercase; checking the pattern after uppercasing
+        // also rescues codes a source delivered in lowercase. Two codes that
+        // differ only in case would map to the same file — first one wins.
+        const fileCode = base.toUpperCase()
+
+        if (!SAFE_CODE.test(fileCode)) {
             skippedUnsafeName.push(base)
+            continue
+        }
+
+        if (written.has(fileCode)) {
+            console.warn(`distribute: skipping ${base} — ${fileCode}.json already written this run`)
             continue
         }
 
@@ -106,10 +145,10 @@ export default async function distribute(
             rates[code] = rate / baseRate
         }
 
-        const file: SymbolFile = { base, timestamp, rates }
+        const file: SymbolFile = { base: fileCode, timestamp, rates }
 
-        written.add(base)
-        queue.push(writeFileAtomic(path.join(outputDir, `${base}.json`), JSON.stringify(file)))
+        written.add(fileCode)
+        queue.push(writeFileAtomic(path.join(outputDir, `${fileCode}.json`), JSON.stringify(file)))
 
         if (queue.length >= WRITE_CONCURRENCY) {
             await Promise.all(queue)
@@ -122,6 +161,39 @@ export default async function distribute(
     if (written.size === 0) {
         throw new DistributeError('no symbol files written — every requested base was skipped')
     }
+
+    // index.json lists every symbol that got a file this run and where each
+    // file lives once published. Sorted for stable diffs between runs.
+    const symbols = [...written].sort()
+    const locations: Record<string, string> = {}
+    for (const symbol of symbols) {
+        locations[symbol] = LOCATION_TEMPLATE.replace('<symbol>', symbol)
+    }
+
+    await writeFileAtomic(INDEX_FILE, JSON.stringify({ symbols, locations }))
+
+    // Quick at-a-glance stats; anything deeper belongs in the data itself.
+    const sources = new Set<string>()
+    let multiSourceSymbols = 0
+    let outliersDiscarded = 0
+
+    for (const entry of Object.values(data)) {
+        for (const rate of entry.rates) {
+            sources.add(rate.source)
+            if (rate.outlier) outliersDiscarded++
+        }
+        if (entry.rates.length > 1) multiSourceSymbols++
+    }
+
+    const stats = {
+        symbol_count: written.size,
+        timestamp: formatTimestamp(new Date()),
+        sources: [...sources].sort(),
+        multi_source_symbols: multiSourceSymbols,
+        outliers_discarded: outliersDiscarded
+    }
+
+    await writeFileAtomic(STATS_FILE, JSON.stringify(stats, null, 4))
 
     let pruned = 0
     if (options.prune && options.bases === undefined) {
