@@ -1,12 +1,13 @@
 {
-    "symbol_count": 165,
-    "timestamp": "11th June @ 14:54",
+    "symbol_count": 177,
+    "timestamp": "11th June @ 22:08",
     "sources": [
         "coingecko",
         "currencyapi",
         "currencylayer",
         "openexchangerates"
     ],
-    "multi_source_symbols": 164,
+    "source_count": 4,
+    "multi_source_symbols": 175,
     "outliers_discarded": 2
 }
