@@ -8,6 +8,7 @@ on:
 jobs:
   generate:
     runs-on: ubuntu-latest
+    environment: actions
 
     steps:
       - name: Checkout workflow repository
@@ -25,7 +26,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Generate Blacklist
+      - name: generate
+        env:
+          CURRENCYAPI_KEY: ${{ vars.CURRENCYAPI_KEY }}
+          COINGECKO_KEY: ${{ vars.COINGECKO_KEY }}
+          OPENEXCHANGERATES_KEY: ${{ vars.OPENEXCHANGERATES_KEY }}
+          CURRENCYLAYER_KEY: ${{ vars.CURRENCYLAYER_KEY }}
         run: npx tsx src/index.ts
 
       - name: Checkout target repository
