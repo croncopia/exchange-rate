@@ -189,6 +189,7 @@ export default async function distribute(
         symbol_count: written.size,
         timestamp: formatTimestamp(new Date()),
         sources: [...sources].sort(),
+        source_count: sources.size,
         multi_source_symbols: multiSourceSymbols,
         outliers_discarded: outliersDiscarded
     }
