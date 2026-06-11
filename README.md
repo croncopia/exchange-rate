@@ -1,0 +1,10 @@
+# exchange-rate
+
+Aggregated fiat exchange rates, rebuilt hourly from diffrent providers and published as static JSON — one file per currency, no API key required to consume.
+
+## How it works
+
+1. **Fetch** — each source module pulls the latest rates from its provider and normalises them to a common convention: *units of currency per 1 USD*. 
+2. **Filter** — only fiat currencies pass into the aggregate. An ISO 4217 whitelist (`src/fiat.ts`) is enforced at a single choke point, which also stops crypto tokens that reuse fiat-looking ticker symbols from polluting real currencies.
+3. **Aggregate** — sources are fetched concurrently and each may fail independently; the run continues as long as at least one source delivers. Per currency, the rates are averaged — and when 3+ sources report, any rate deviating more than 10% from the median is discarded as an outlier before averaging (the discarded value stays visible in the data, flagged `"outlier": true`).
+4. **Distribute** — one JSON file is written per currency. Since every rate is USD-based, the cross rate for any base is a single division: a currency's file divides every other rate by its own. Writes are atomic (temp file + rename), so consumers can never read a half-written file.
