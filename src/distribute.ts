@@ -2,7 +2,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import { AggregatedRates } from './aggregate'
 
-const OUTPUT_DIR = './output'
+const OUTPUT_DIR = './out'
 
 // Codes come from external APIs and include unicode, "$", dots, spaces and
 // worse — only codes matching this pattern get their own file. Unsafe codes
