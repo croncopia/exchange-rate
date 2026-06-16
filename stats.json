@@ -1,6 +1,6 @@
 {
     "symbol_count": 177,
-    "timestamp": "16th June @ 00:21",
+    "timestamp": "16th June @ 05:41",
     "sources": [
         "coingecko",
         "currencyapi",
@@ -9,5 +9,5 @@
     ],
     "source_count": 4,
     "multi_source_symbols": 175,
-    "outliers_discarded": 3
+    "outliers_discarded": 4
 }
