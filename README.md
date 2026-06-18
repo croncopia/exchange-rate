@@ -4,39 +4,54 @@
 ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcroncopia%2Fexchange-rate%2Frefs%2Fheads%2Fmain%2Fstats.json&query=source_count&label=Sources&cacheSeconds=20&style=flat-square&labelColor=%235C6E45&color=%23F3EAD6)
 ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcroncopia%2Fexchange-rate%2Frefs%2Fheads%2Fmain%2Fstats.json&query=timestamp&label=Last%20Updated&cacheSeconds=20&style=flat-square&labelColor=%235C6E45&color=%23F3EAD6)
 
-Aggregated fiat exchange rates, rebuilt every 30 minutes from diffrent providers and published as static JSON — one file per currency, no API key required to consume.
+Aggregated fiat exchange rates, rebuilt every 30 minutes from independent providers and published as static JSON — one file per currency, no API key required, no rate limits.
 
 ## How to access the data?
 
-Access is as simple as fetching the specific JSON file. There are multiple ways to do this depending on your caching and freshness needs — to target a specific currency, change `GBP` to the relevant ISO code:
-
-**GitHub raw** — direct from the repo, always reflects the latest commit, no caching layer (subject to GitHub's rate limits on heavy use):
-```
-https://raw.githubusercontent.com/croncopia/exchange-rate/refs/heads/main/latest/GBP.json
-```
-
-**jsDelivr** — CDN-cached globally, fast and reliable for production use (cache typically refreshes every ~12-24h, or instantly if you pin a commit SHA instead of a branch):
-```
-https://cdn.jsdelivr.net/gh/croncopia/exchange-rate/latest/GBP.json
-```
-
-**Statically** — alternative CDN proxy, similar caching behaviour to jsDelivr, useful as a fallback or for load distribution:
-```
-https://cdn.statically.io/gh/croncopia/exchange-rate/main/latest/GBP.json
-```
-
-**Githack** — serves files with correct `Content-Type` headers, handy if you're fetching this client-side and need proper MIME types rather than `text/plain`:
-```
-https://raw.githack.com/croncopia/exchange-rate/main/latest/GBP.json
-```
+Access is as simple as fetching the specific JSON file. There are multiple ways to do this depending on your caching and freshness needs — to target a specific currency, change `USD` to the relevant ISO code:
 
 **GitHub Pages** — served as a static site, good if you want a less verbose url and a stable endpoint with predictable caching via GitHub's own CDN:
 ```
-https://croncopia.github.io/exchange-rate/latest/GBP.json
+https://croncopia.github.io/exchange-rate/latest/USD.json
+```
+**jsDelivr** — CDN-cached globally, fast and reliable for production use (cache typically refreshes every ~12-24h, or instantly if you pin a commit SHA instead of a branch):
+```
+https://cdn.jsdelivr.net/gh/croncopia/exchange-rate/latest/USD.json
+```
+**Statically** — alternative CDN proxy, similar caching behaviour to jsDelivr, useful as a fallback or for load distribution:
+```
+https://cdn.statically.io/gh/croncopia/exchange-rate/main/latest/USD.json
+```
+**Githack** — serves files with correct `Content-Type` headers, handy if you're fetching this client-side and need proper MIME types rather than `text/plain`:
+```
+https://raw.githack.com/croncopia/exchange-rate/main/latest/USD.json
+```
+**GitHub raw** — direct from the repo, always reflects the latest commit, no caching layer (subject to GitHub's rate limits on heavy use):
+```
+https://raw.githubusercontent.com/croncopia/exchange-rate/refs/heads/main/latest/USD.json
 ```
 
-> **Note:** If you need guaranteed up-to-the-minute data, use the `raw.githubusercontent.com` link. If you're optimizing for speed/uptime and can tolerate slightly stale data, the CDN options (jsDelivr, Statically, Githack) are the better choice.
+> [!NOTE] 
+> If you need guaranteed up-to-the-minute data, use the `raw.githubusercontent.com` link. If you're optimizing for speed/uptime and can tolerate slightly stale data, the CDN options (jsDelivr, Statically, Githack) are the better choice.
 
+## Data Structure
+
+Each file is a flat map of one base currency against every tracked rate, stamped with the moment it was generated:
+
+```json
+{
+  "base":"USD",
+  "timestamp":"2026-06-18T14:27:51.601Z",
+  "rates":{
+    "AED":3.6726751561053415,
+    "AFN":63.79775620336667,
+    "ALL":82.05913029963334,
+    "AMD":368.37341723736813,
+    "ANG":1.7894677729666668,
+    ...
+  }
+}
+```
 ## How it works?
 
 1. **Fetch** — each source module pulls the latest rates from its provider and normalises them to a common convention: *units of currency per 1 USD*. 
