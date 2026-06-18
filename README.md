@@ -30,7 +30,7 @@ https://cdn.statically.io/gh/croncopia/exchange-rate/main/latest/GBP.json
 https://raw.githack.com/croncopia/exchange-rate/main/latest/GBP.json
 ```
 
-**GitHub Pages** — served as a static site, good if you want a stable endpoint with predictable caching via GitHub's own CDN:
+**GitHub Pages** — served as a static site, good if you want a less verbose url and a stable endpoint with predictable caching via GitHub's own CDN:
 ```
 https://croncopia.github.io/exchange-rate/latest/GBP.json
 ```
