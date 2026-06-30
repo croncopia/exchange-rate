@@ -12,7 +12,7 @@ Access is as simple as fetching the specific JSON file. There are multiple ways 
 
 **GitHub Pages** — served as a static site, good if you want a less verbose url and a stable endpoint with predictable caching via GitHub's own CDN:
 ```
-https://croncopia.github.io/exchange-rate/latest/USD.json
+https://exchange.croncopia.com/latest/USD.json
 ```
 **jsDelivr** — CDN-cached globally, fast and reliable for production use (cache typically refreshes every ~12-24h, or instantly if you pin a commit SHA instead of a branch):
 ```
