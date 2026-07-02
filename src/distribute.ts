@@ -6,7 +6,7 @@ const OUTPUT_DIR = './out'
 
 // The index and stats live in the repo root, next to the output dir — not
 // inside it — so they survive a prune and sit at a stable, well-known path.
-const INDEX_FILE = './index.json'
+const INDEX_FILE = './out/index.json'
 const STATS_FILE = './stats.json'
 
 // Where each symbol file ends up once published; written into index.json so
