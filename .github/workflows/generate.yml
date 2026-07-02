@@ -52,6 +52,8 @@ jobs:
           # Remove the out directory itself if it gets copied
           rm -rf target-repo/latest/out
 
+          cp stats.json target-repo/
+
       - name: Commit and push all changes
         run: |
           cd target-repo
